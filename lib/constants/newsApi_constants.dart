@@ -1,7 +1,7 @@
 class NewsApiConstants {
   NewsApiConstants._();
-  static const newsApiKey = '704d7e00c409422aa36b57973519dbce';
-  static const mediaStackApi = '704d7e00c409422aa36b57973519dbce';
+  static const newsApiKey = '3b3106cf14764665a4a9cf9aa534f9c9';
+  static const mediaStackApi = '3b3106cf14764665a4a9cf9aa534f9c9';
   static const articles = 'articles';
   static const mediaStackData = 'data';
   static const id = 'id';

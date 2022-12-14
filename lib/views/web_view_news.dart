@@ -4,6 +4,8 @@ import 'package:news/controllers/news_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../constants/color_constants.dart';
+
 class WebViewNews extends ConsumerStatefulWidget {
   final String newsUrl;
   WebViewNews({Key? key, required this.newsUrl}) : super(key: key);
@@ -24,6 +26,14 @@ class _WebViewNewsState extends ConsumerState<WebViewNews> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.close_rounded),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: Text("News Info"),
+          backgroundColor: AppColors.burgundy,
+        ),
         body: WebView(
       initialUrl: widget.newsUrl,
       javascriptMode: JavascriptMode.unrestricted,

@@ -3,12 +3,15 @@ import 'package:news/constants/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/saved_item_model.dart';
+import 'package:news/views/save_page.dart';
 
-class NewsCard extends StatelessWidget {
+class SavedItemCard extends StatelessWidget {
+  final int id;
   final String imgUrl, title, desc, content, postUrl;
 
-  const NewsCard(
+  const SavedItemCard(
       {Key? key,
+        required this.id,
       required this.imgUrl,
       required this.desc,
       required this.title,
@@ -17,12 +20,24 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future removeSavedItem() async {
+      await SavedItemsDatabase.instance.delete(id);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const SavePage()),
+              (r) => false
+
+      );
+    }
+
+
+
     return Card(
       elevation: Sizes.dimen_4,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(Sizes.dimen_10))),
       margin: const EdgeInsets.fromLTRB(
-          Sizes.dimen_16, 0, Sizes.dimen_16, Sizes.dimen_16),
+          Sizes.dimen_8, 0, Sizes.dimen_8, Sizes.dimen_8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -33,7 +48,7 @@ class NewsCard extends StatelessWidget {
                   topRight: Radius.circular(Sizes.dimen_10)),
               child: Image.network(
                 imgUrl,
-                height: 200,
+                height: 100,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.fill,
                 // if the image is null
@@ -44,7 +59,7 @@ class NewsCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: const SizedBox(
-                      height: 200,
+                      height: 100,
                       width: double.infinity,
                       child: Icon(Icons.broken_image_outlined),
                     ),
@@ -78,18 +93,18 @@ class NewsCard extends StatelessWidget {
               itemBuilder: (context) {
                 return [
                   PopupMenuItem(
-                    value: 'add',
-                    child: Text('Add'),
+                    value: 'remove',
+                    child: Text('Remove'),
                   ),
 
                 ];
               },
               onSelected: (String value){
-                print('added');
-                if (value == 'add') {
-                  addSavedItem();
+                print('removed');
+                if (value == 'remove') {
+                  removeSavedItem();
                   const snackBar = SnackBar(
-                    content: Text('News Added to the Saved News'),
+                    content: Text('News Removed from the Saved News'),
                   );
 
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -103,19 +118,10 @@ class NewsCard extends StatelessWidget {
         ],
       ),
     );
+
+
+
   }
 
-  Future addSavedItem() async {
-    final savedItem = SavedItem(
-      author: "BBC",
-      title: title,
-      urlToImage: imgUrl,
-      url: postUrl,
-      content: content,
-      description: desc,
-      publishedAt: "NEWZ"
-    );
 
-    await SavedItemsDatabase.instance.create(savedItem);
-  }
 }

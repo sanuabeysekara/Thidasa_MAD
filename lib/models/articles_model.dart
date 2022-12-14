@@ -1,5 +1,7 @@
 import 'package:news/models/source_model.dart';
 
+
+
 class ArticleModel {
   ArticleModel(this.source, this.author, this.title, this.description, this.url,
       this.urlToImage, this.publishedAt, this.content);

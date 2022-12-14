@@ -5,7 +5,11 @@ import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:news/controllers/news_controller.dart';
 import 'package:news/providers/news_provider.dart';
+import 'package:news/views/filter_page.dart';
+import 'package:news/views/save_page.dart';
+import 'package:news/views/settings_page.dart';
 import 'package:news/views/web_view_news.dart';
+import 'package:news/views/your_page.dart';
 import 'package:news/widgets/custom_appBar.dart';
 import 'package:news/widgets/news_card.dart';
 //import 'package:news/widgets/side_drawer.dart';
@@ -15,17 +19,56 @@ import 'package:get/get.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/articles_model.dart';
+import '../providers/navigation_provider.dart';
+class HomePage extends ConsumerStatefulWidget  {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
 
-class HomePage extends ConsumerWidget  {
-  HomePage({Key? key}) : super(key: key);
+
+
+class _HomePageState extends ConsumerState  {
 
   TextEditingController searchController = TextEditingController();
 
 
+  int _selectedIndex = 0;
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+              (r) => false
+
+      );
+    }
+    if (index == 1) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SavePage()),
+              (r) => false
+
+      );
+    }
+    if (index == 2) {
+      Navigator.pushAndRemoveUntil(
+        context,
+          MaterialPageRoute(builder: (context) => const SettingsPage()),
+              (r) => false
+      );
+    }
+
+  }
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context) {
     List<ArticleModel> allNews = ref.watch(newsProvider).allNews;
     List<ArticleModel> breakingNews = ref.watch(newsProvider).breakingNews;
 
@@ -79,6 +122,11 @@ class HomePage extends ConsumerWidget  {
                             ref.read(newsProvider).getAllNews(
                                 searchKey: ref.read(newsProvider).searchNews);
                             searchController.clear();
+                            const snackBar = SnackBar(
+                              content: Text('Searching...'),
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           },
                         ),
                       ),
@@ -117,8 +165,13 @@ class HomePage extends ConsumerWidget  {
                             location: BannerLocation.topStart,
                             message: 'Headlines',
                             child: InkWell(
-                              onTap: () => Get.to(() =>
-                                  WebViewNews(newsUrl: instance.url)),
+
+                              onTap: (){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => WebViewNews(newsUrl: instance.url)));
+
+                              },
                               child: Stack(children: [
                                 ClipRRect(
                                   borderRadius:
@@ -235,8 +288,14 @@ class HomePage extends ConsumerWidget  {
                 }
                 if(allNews[index].urlToImage != null && index < allNews.length){
                         return  InkWell(
-                          onTap: () => Get.to(() => WebViewNews(
-                              newsUrl: allNews[index].url)),
+                          // onTap: () => Get.to(() => WebViewNews(
+                          //     newsUrl: allNews[index].url)),
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => WebViewNews(newsUrl: allNews[index].url)));
+
+                          },
                           child: NewsCard(
                               imgUrl: allNews[index].urlToImage ??
                                   '',
@@ -256,10 +315,44 @@ class HomePage extends ConsumerWidget  {
                 }
 
 
+
               }
               ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const FilterPage()),
+          );
+        },
+        backgroundColor: AppColors.burgundy,
+        child: const Icon(Icons.filter_alt_outlined),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: AppColors.burgundy,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Saved',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.chat),
+          //   label: 'Chats',
+          // ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

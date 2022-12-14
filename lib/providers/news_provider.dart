@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:news/utils/shared_preferences.dart';
 
 import '../constants/newsApi_constants.dart';
 import '../models/articles_model.dart';
@@ -19,8 +20,8 @@ class NewsNotifier extends ChangeNotifier {
   bool isLoading = false;
   bool hasMore = true;
   String cName = '';
-  String country = '';
-  String category = '';
+  String country = UserSharedPreferences.getDefaultCountry() == null ? "" : UserSharedPreferences.getDefaultCountry()!;
+  String category = UserSharedPreferences.getDefaultCategory() == null ? "" : UserSharedPreferences.getDefaultCategory()!;
   String channel = '';
   String searchNews = '';
   int pageNum = 1;
@@ -52,14 +53,16 @@ class NewsNotifier extends ChangeNotifier {
   }
 
   reset(){
-    country = '';
-    category = '';
+    country = UserSharedPreferences.getDefaultCountry() == null ? "" : UserSharedPreferences.getDefaultCountry()!;
+    category = UserSharedPreferences.getDefaultCategory() == null ? "" : UserSharedPreferences.getDefaultCategory()!;
     searchNews = '';
     channel = '';
     cName = '';
     hasMore = true;
+    notifyListeners();
     getAllNews(reload: true);
     getBreakingNews(reload: true);
+    if (scrollController.hasClients) scrollController.jumpTo(0.0);
     notifyListeners();
 
   }
@@ -69,7 +72,7 @@ class NewsNotifier extends ChangeNotifier {
 
     if (!reload && isLoading == false) {
     } else {
-      country = '';
+      country = UserSharedPreferences.getDefaultCountry() == null ? "" : UserSharedPreferences.getDefaultCountry()!;
     }
     if (isLoading == true) {
       pageNum++;
@@ -97,8 +100,8 @@ class NewsNotifier extends ChangeNotifier {
 
     if (!reload && isLoading == false) {
     } else {
-      country = '';
-      category = '';
+      //country = '';
+      //category = '';
     }
     if (isLoading == true) {
       pageNum++;
@@ -206,3 +209,7 @@ class NewsNotifier extends ChangeNotifier {
 final newsProvider = ChangeNotifierProvider<NewsNotifier>((ref) {
   return NewsNotifier();
 });
+
+
+
+

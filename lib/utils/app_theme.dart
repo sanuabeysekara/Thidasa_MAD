@@ -6,7 +6,7 @@ class Themes {
     primaryColor: AppColors.burgundy,
     scaffoldBackgroundColor: AppColors.lightGrey,
     buttonTheme: const ButtonThemeData(buttonColor: AppColors.orangeWeb),
-    appBarTheme: const AppBarTheme(backgroundColor: AppColors.burgundy),
+    appBarTheme:  AppBarTheme(backgroundColor: AppColors.burgundy),
     colorScheme:
         ColorScheme.fromSwatch().copyWith(secondary: AppColors.orangeWeb),
   );

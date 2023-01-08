@@ -20,6 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/articles_model.dart';
 import '../providers/navigation_provider.dart';
+import '../widgets/bottom_navigation_bar.dart';
 class HomePage extends ConsumerStatefulWidget  {
   const HomePage({Key? key}) : super(key: key);
 
@@ -35,38 +36,7 @@ class _HomePageState extends ConsumerState  {
   TextEditingController searchController = TextEditingController();
 
 
-  int _selectedIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-              (r) => false
-
-      );
-    }
-    if (index == 1) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SavePage()),
-              (r) => false
-
-      );
-    }
-    if (index == 2) {
-      Navigator.pushAndRemoveUntil(
-        context,
-          MaterialPageRoute(builder: (context) => const SettingsPage()),
-              (r) => false
-      );
-    }
-
-  }
   @override
   Widget build(BuildContext context) {
     List<ArticleModel> allNews = ref.watch(newsProvider).allNews;
@@ -79,7 +49,7 @@ class _HomePageState extends ConsumerState  {
           onPressed: () {
             ref.read(newsProvider).reset();
           },
-          icon: const Icon(Icons.refresh),
+          icon: const Icon(Icons.search),
         ),
       ]),
       body: SingleChildScrollView(
@@ -331,29 +301,7 @@ class _HomePageState extends ConsumerState  {
         backgroundColor: AppColors.burgundy,
         child: const Icon(Icons.filter_alt_outlined),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: AppColors.burgundy,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.chat),
-          //   label: 'Chats',
-          // ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: CustomBottomNavBar(0),
     );
   }
 }

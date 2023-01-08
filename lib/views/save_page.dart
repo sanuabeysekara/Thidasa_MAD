@@ -24,6 +24,7 @@ import 'package:news/widgets/saved_item_card.dart';
 
 import '../models/articles_model.dart';
 import '../providers/navigation_provider.dart';
+import '../widgets/bottom_navigation_bar.dart';
 
 
 
@@ -41,7 +42,6 @@ class SavePage extends ConsumerStatefulWidget {
 class _SavePageState extends ConsumerState {
   TextEditingController searchController = TextEditingController();
 
-  int _selectedIndex = 1;
 
   late List<SavedItem> savedItems;
   bool isLoading = false;
@@ -67,36 +67,6 @@ class _SavePageState extends ConsumerState {
     setState(() => isLoading = false);
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-              (r) => false
-
-      );
-    }
-    if (index == 1) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const SavePage()),
-              (r) => false
-
-      );
-    }
-    if (index == 2) {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const SettingsPage()),
-              (r) => false
-      );
-    }
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,29 +89,7 @@ class _SavePageState extends ConsumerState {
       ),
 
 
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: AppColors.burgundy,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.chat),
-          //   label: 'Chats',
-          // ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: CustomBottomNavBar(1),
     );
   }
 

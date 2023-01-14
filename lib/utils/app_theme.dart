@@ -5,9 +5,11 @@ class Themes {
   static final appTheme = ThemeData(
     primaryColor: AppColors.thidasaDarkBlue,
     scaffoldBackgroundColor: AppColors.thidasaDarkBlue,
+    brightness: Brightness.dark,
     buttonTheme: const ButtonThemeData(buttonColor: AppColors.orangeWeb),
     appBarTheme:  AppBarTheme(backgroundColor: AppColors.thidasaDarkBlue),
     colorScheme:
         ColorScheme.fromSwatch().copyWith(secondary: AppColors.orangeWeb),
   );
 }
+

@@ -63,7 +63,7 @@ class NewsController1 extends GetxController{
     // default country is set to US
     baseUrl += country.isEmpty ? 'country=us&' : 'country=$country&';
     //baseApi += category.isEmpty ? '' : 'category=$category&';
-    baseUrl += 'apiKey=${NewsApiConstants.newsApiKey}';
+    baseUrl += 'apiKey=${ThidasaApiConstants.newsApiKey}';
     print([baseUrl]);
     // calling the API function and passing the URL here
     getBreakingNewsFromApi(baseUrl);
@@ -91,18 +91,18 @@ class NewsController1 extends GetxController{
     baseUrl += country.isEmpty ? 'country=in&' : 'country=$country&';
     // default category is set to Business
     baseUrl += category.isEmpty ? 'category=business&' : 'category=$category&';
-    baseUrl += 'apiKey=${NewsApiConstants.newsApiKey}';
+    baseUrl += 'apiKey=${ThidasaApiConstants.newsApiKey}';
     if (channel != '') {
       country.value = '';
       category.value = '';
       baseUrl =
-      "https://newsapi.org/v2/top-headlines?sources=$channel&apiKey=${NewsApiConstants.newsApiKey}";
+      "https://newsapi.org/v2/top-headlines?sources=$channel&apiKey=${ThidasaApiConstants.newsApiKey}";
     }
     if (searchKey != '') {
       country.value = '';
       category.value = '';
       baseUrl =
-      "https://newsapi.org/v2/everything?q=$searchKey&sortBy=popularity&pageSize=10&apiKey=${NewsApiConstants.newsApiKey}";
+      "https://newsapi.org/v2/everything?q=$searchKey&sortBy=popularity&pageSize=10&apiKey=${ThidasaApiConstants.newsApiKey}";
     }
     print(baseUrl);
     // calling the API function and passing the URL here

@@ -47,6 +47,20 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_phoenix: ^1.0.0
   restart_app: ^1.1.1
+  image_picker: ^0.8.6
+  path_provider: ^2.0.11
+  permission_handler: ^8.3.0
+  shimmer: ^2.0.0
+  dio: ^4.0.6
+  curved_navigation_bar: ^1.0.3
+  awesome_snackbar_content: ^0.1.0
+  flushbar: ^1.10.4
+  youtube_player_flutter: ^8.1.2
+  intl: ^0.18.0
+  favorite_button: ^0.0.4
+  flutter_rating_bar: ^4.0.1
+  url_launcher: ^6.1.7
+  torrent_streamer: ^0.0.2
 
 
 

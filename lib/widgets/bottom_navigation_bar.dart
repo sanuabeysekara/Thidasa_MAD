@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/color_constants.dart';
@@ -27,53 +28,36 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         _selectedIndex = index;
       });
 
-      if (index == 0) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-                (r) => false
-
-        );
-      }
-      if (index == 1) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const SavePage()),
-                (r) => false
-
-        );
-      }
-      if (index == 2) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const SettingsPage()),
-                (r) => false
-        );
-      }
+      
 
     }
-    return BottomNavigationBar(
-      selectedItemColor: AppColors.burgundy,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark),
-          label: 'Saved',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
-        ),
-// BottomNavigationBarItem(
-//   icon: Icon(Icons.chat),
-//   label: 'Chats',
-// ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+    return Container(
+      child: CurvedNavigationBar(
+        backgroundColor: AppColors.thidasaDarkBlue,
+        height: 50,
+        color: AppColors.thidasaBlue,
+        animationDuration: Duration(milliseconds: 300),
+        items: [
+          Icon(
+            Icons.home,
+            color: AppColors.thidasaLightBlue,
+          ),
+          Icon(
+            Icons.search,
+            color: AppColors.thidasaLightBlue,
+          ),
+          Icon(
+            Icons.favorite,
+            color: AppColors.thidasaLightBlue,
+          ),
+          Icon(
+            Icons.supervised_user_circle,
+            color: AppColors.thidasaLightBlue,
+          )
+        ],
+        index: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }

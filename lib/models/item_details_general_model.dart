@@ -15,30 +15,30 @@ String itemDetailsGeneralToJson(ItemDetailsGeneral? data) => json.encode(data!.t
 class ItemDetailsGeneral {
   ItemDetailsGeneral({
     this.cid,
-    this.isAlreadyReviewed,
-    this.isAlreadyWishlisted,
+    this.is_already_reviewed,
+    this.is_already_wishlisted,
     this.itemData,
     this.reviews,
   });
 
   String? cid;
-  bool? isAlreadyReviewed;
-  bool? isAlreadyWishlisted;
+  bool? is_already_reviewed;
+  bool? is_already_wishlisted;
   ItemModel? itemData;
   List<Review?>? reviews;
 
   factory ItemDetailsGeneral.fromJson(Map<String, dynamic> json) => ItemDetailsGeneral(
     cid: json["cid"],
-    isAlreadyReviewed: json["is_already_reviewed"],
-    isAlreadyWishlisted: json["is_already_wishlisted"],
+    is_already_reviewed: json["is_already_reviewed"],
+    is_already_wishlisted: json["is_already_wishlisted"],
     itemData: json["item_data"] == null ? ItemModel() : ItemModel.fromJson(json["item_data"]),
     reviews: json["reviews"] == null ? [] : List<Review?>.from(json["reviews"]!.map((x) => Review.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "cid": cid,
-    "is_already_reviewed": isAlreadyReviewed,
-    "is_already_wishlisted": isAlreadyWishlisted,
+    "is_already_reviewed": is_already_reviewed,
+    "is_already_wishlisted": is_already_wishlisted,
     "item_data": itemData == null ? [] : itemData!.toJson(),
     "reviews": reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x!.toJson())),
   };

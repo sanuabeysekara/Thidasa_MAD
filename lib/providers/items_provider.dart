@@ -42,6 +42,9 @@ class ItemsNotifier extends ChangeNotifier {
     //getAllNews();
     getTrendingItems();
     getLatestItems();
+    if(UserSharedPreferences.getToken()!=null){
+      initializeFavourites();
+    }
   }
 
 
@@ -176,6 +179,55 @@ class ItemsNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  initializeFavourites({reload = false}) async {
+    isLatestItemsLoading = true;
+    itemNotFound = false;
+
+
+    baseUrl = ThidasaApiConstants.appURL+"favourite_list/"+UserSharedPreferences.getID()!;
+
+    print([baseUrl]);
+    // calling the API function and passing the URL here
+    getLatestItemsFromApi(baseUrl);
+  }
+
+  getLatestFavouritesFromApi(url) async {
+    http.Response res = await http.get(Uri.parse(url));
+
+    if (res.statusCode == 200) {
+      List<ItemModel> items = (jsonDecode(res.body) as List<dynamic>).map((e) =>
+          ItemModel.fromJson(e as Map<String, dynamic>)).toList();
+
+      if (items.isEmpty && items.length == 0) {
+        itemNotFound = isLatestItemsLoading == true ? false : true;
+        isLatestItemsLoading = false;
+        notifyListeners();
+      } else {
+        if (isLatestItemsLoading == true) {
+          // combining two list instances with spread operator
+          latestItems = [...latestItems, ...items];
+          notifyListeners();
+        } else {
+          if (items.isNotEmpty) {
+            latestItems = items;
+            if (scrollController.hasClients) scrollController.jumpTo(0.0);
+            notifyListeners();
+          }
+        }
+        itemNotFound = false;
+        Future.delayed(const Duration(seconds: 4),(){
+          isLatestItemsLoading = false;
+          notifyListeners();
+
+        });        notifyListeners();
+      }
+    } else {
+      itemNotFound = true;
+      notifyListeners();
+    }
+  }
+
 
 }
 // Finally, we are using StateNotifierProvider to allow the UI to interact with

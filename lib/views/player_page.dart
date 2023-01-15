@@ -4,7 +4,6 @@ import 'package:news/constants/color_constants.dart';
 import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:news/controllers/news_controller.dart';
-import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/genres_model.dart';
 import 'package:news/models/saved_item_model.dart';
 import 'package:news/providers/genres_provider.dart';
@@ -121,86 +120,88 @@ class _PlayerPageState extends ConsumerState<PlayerPage> {
               ),
               title: Text(widget.episode_no==null?widget.title:"Episode "+widget.episode_no!, style: TextStyle(overflow: TextOverflow.ellipsis),),
             ),
-            body:  Column(
-              children: [
-                // ClipRRect(
-                //   borderRadius: BorderRadius.circular(10),
-                //   child: Image.network(
-                //     ThidasaApiConstants.imageBannerBaseURL + widget.banner ?? "",
-                //     fit: BoxFit.fitHeight,
-                //     height: 280,
-                //     errorBuilder: (BuildContext context, Object exception,
-                //         StackTrace? stackTrace) {
-                //       return Card(
-                //         shape: RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(10)),
-                //         child: const SizedBox(
-                //           height: 200,
-                //           width: double.infinity,
-                //           child: Icon(Icons.broken_image_outlined),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
-                Container(
-                  child: player,
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      //SizedBox(height: 150,),
+            body:  SingleChildScrollView(
+              child: Column(
+                children: [
+                  // ClipRRect(
+                  //   borderRadius: BorderRadius.circular(10),
+                  //   child: Image.network(
+                  //     ThidasaApiConstants.imageBannerBaseURL + widget.banner ?? "",
+                  //     fit: BoxFit.fitHeight,
+                  //     height: 280,
+                  //     errorBuilder: (BuildContext context, Object exception,
+                  //         StackTrace? stackTrace) {
+                  //       return Card(
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(10)),
+                  //         child: const SizedBox(
+                  //           height: 200,
+                  //           width: double.infinity,
+                  //           child: Icon(Icons.broken_image_outlined),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+                  Container(
+                    child: player,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        //SizedBox(height: 150,),
 
-                      Column(
-                        children: [
+                        Column(
+                          children: [
 
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              widget.title,
-                              style: const TextStyle(
-                                  fontSize: Sizes.dimen_36,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  overflow: TextOverflow.ellipsis
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(height: 6,),
-                          Row(
-                            children: [
-                              Icon(Icons.star_border,color: AppColors.thidasaLightBlue,),
-                              SizedBox(width: 5,),
-                              Text(
-                                widget.rating??"",
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                widget.title,
                                 style: const TextStyle(
-                                    fontSize: Sizes.dimen_20,
+                                    fontSize: Sizes.dimen_36,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.normal,
+                                    fontWeight: FontWeight.w300,
                                     overflow: TextOverflow.ellipsis
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-
-                          Text(widget.description??"",
-                            style: const TextStyle(
-                              fontSize: Sizes.dimen_18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w300,
                             ),
-                          ),
+
+                            SizedBox(height: 6,),
+                            Row(
+                              children: [
+                                Icon(Icons.star_border,color: AppColors.thidasaLightBlue,),
+                                SizedBox(width: 5,),
+                                Text(
+                                  widget.rating??"",
+                                  style: const TextStyle(
+                                      fontSize: Sizes.dimen_20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                      overflow: TextOverflow.ellipsis
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20,),
+
+                            Text(widget.description??"",
+                              style: const TextStyle(
+                                fontSize: Sizes.dimen_18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
 
 
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
+                          ],
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         }

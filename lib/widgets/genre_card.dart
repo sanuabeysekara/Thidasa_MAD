@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/saved_item_model.dart';
 import 'package:news/views/save_page.dart';
 import 'package:news/widgets/trending_list_genres.dart';

@@ -61,6 +61,9 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   url_launcher: ^6.1.7
   torrent_streamer: ^0.0.2
+  connectivity_plus: ^3.0.2
+  internet_connection_checker: ^1.0.0+1
+  video_player: ^2.4.10
 
 
 
@@ -85,7 +88,7 @@ flutter_icons:
 
 flutter_native_splash:
   image: assets/images/splash.png
-  color: "#ffffff"
+  color: "#131720"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

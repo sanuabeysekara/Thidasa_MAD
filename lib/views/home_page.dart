@@ -79,7 +79,7 @@ class _HomePageState extends ConsumerState  {
                 options: CarouselOptions(
                     aspectRatio: 16/9, height: 250, autoPlay: true, enlargeCenterPage: true),
                 items: trendingList.map((instance) {
-                  return ref.read(newsProvider).articleNotFound
+                  return false
                       ? const Center(
                       child: Text("Not Found",
                           style: TextStyle(fontSize: 30)))

@@ -15,7 +15,7 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="magnet" />
+            <data android:scheme="tel" />
         </intent>
     </queries>
     <application

@@ -18,7 +18,9 @@ class ThidasaApiConstants {
   static const language = 'language';
   static const category = 'category';
   static const country = 'country';
-  static const baseURL = 'http://192.168.1.5/thidasa/';
+  //static const baseURL = 'http://192.168.1.5/thidasa/';
+  static const baseURL = 'https://thidasa.lk/';
+
   static const appURL = baseURL + 'index.php/api/';
   static const itemContentURL = baseURL + 'index.php/api/view';
   static const imageHomeBaseURL = baseURL + 'images/home/';

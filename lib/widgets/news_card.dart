@@ -1,7 +1,6 @@
 import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/saved_item_model.dart';
 
 class NewsCard extends StatelessWidget {
@@ -116,6 +115,5 @@ class NewsCard extends StatelessWidget {
       publishedAt: "NEWZ"
     );
 
-    await SavedItemsDatabase.instance.create(savedItem);
   }
 }

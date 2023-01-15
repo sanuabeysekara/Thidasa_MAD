@@ -6,7 +6,6 @@ import 'package:news/constants/color_constants.dart';
 import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:news/controllers/news_controller.dart';
-import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/saved_item_model.dart';
 import 'package:news/providers/http_provider.dart';
 import 'package:news/providers/news_provider.dart';
@@ -166,7 +165,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    refreshNotes();
   }
 
   @override
@@ -176,13 +174,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     super.dispose();
   }
 
-  Future refreshNotes() async {
-    setState(() => isLoading = true);
 
-    this.savedItems = await SavedItemsDatabase.instance.readAllItems();
-
-    setState(() => isLoading = false);
-  }
 
 
   @override

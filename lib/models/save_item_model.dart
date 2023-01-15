@@ -3,13 +3,57 @@
 //     final itemModel = itemModelFromJson(jsonString);
 
 import 'dart:convert';
+final String tableSavedItems = 'saved_items_table';
 
-ItemModel? itemModelFromJson(String str) => ItemModel.fromJson(json.decode(str));
 
-String itemModelToJson(ItemModel? data) => json.encode(data!.toJson());
 
-class ItemModel {
-  ItemModel({
+class SavedItemFields{
+  static final List<String> values = [
+    /// Add all fields
+   id,cid, title, description, type, genres, age, coverPhoto, basePhoto,bannerPhoto,duration,quality,status,
+  views,rating,comments,releasedYear,dateAdded,link,trailer,offlineStatus,offlinePath
+  ];
+
+  static final String id = "id";
+  static final String cid = "cid";
+  static final String title = "title";
+  static final String description = "description";
+  static final String type = "type";
+  static final String genres = "genres";
+  static final String age = "age";
+  static final String coverPhoto = "cover_photo";
+  static final String basePhoto = "base_photo";
+  static final String bannerPhoto = "banner_photo";
+  static final String duration = "duration";
+  static final String quality = "quality";
+  static final String status = "status";
+  static final String views = "views";
+  static final String rating = "rating";
+  static final String comments = "comments";
+  static final String releasedYear = "released_year";
+  static final String dateAdded = "date_added";
+  static final String link = "link";
+  static final String trailer = "trailer";
+  static final String offlineStatus = "offline_status";
+  static final String offlinePath = "offline_path";
+
+
+
+
+
+
+}
+
+
+
+
+SavedItemModel? itemModelFromJson(String str) => SavedItemModel.fromJson(json.decode(str));
+
+String itemModelToJson(SavedItemModel? data) => json.encode(data!.toJson());
+
+class SavedItemModel {
+  SavedItemModel({
+    this.id,
     this.cid,
     this.title,
     this.description,
@@ -29,8 +73,10 @@ class ItemModel {
     this.dateAdded,
     this.link,
     this.trailer,
+    this.offlineStatus,
+    this.offlinePath
   });
-
+  int? id;
   String? cid;
   String? title;
   String? description;
@@ -50,8 +96,12 @@ class ItemModel {
   DateTime? dateAdded;
   dynamic link;
   String? trailer;
+  String? offlineStatus;
+  String? offlinePath;
 
-  ItemModel copyWith({
+
+  SavedItemModel copyWith({
+    int? id,
     String? cid,
     String? title,
     String? description,
@@ -71,8 +121,11 @@ class ItemModel {
     DateTime? dateAdded,
     dynamic link,
     String? trailer,
+    String? offlineStatus,
+    String? offlinePath,
   }) =>
-      ItemModel(
+      SavedItemModel(
+        id: id ?? this.id,
         cid: cid ?? this.cid,
         title: title ?? this.title,
         description: description ?? this.description,
@@ -92,11 +145,14 @@ class ItemModel {
         dateAdded: dateAdded ?? this.dateAdded,
         link: link ?? this.link,
         trailer: trailer ?? this.trailer,
+        offlineStatus: offlineStatus ?? this.offlineStatus,
+        offlinePath: offlinePath ?? this.offlinePath,
       );
 
 
-  factory ItemModel.fromJson(Map<String, dynamic> json) => ItemModel(
-    cid: json["cid"].toString(),
+  factory SavedItemModel.fromJson(Map<String, dynamic> json) => SavedItemModel(
+    id: json["id"] as int?,
+    cid: json["cid"],
     title: json["title"],
     description: json["description"],
     type: json["type"],
@@ -113,12 +169,15 @@ class ItemModel {
     comments: json["comments"],
     releasedYear: json["released_year"],
     dateAdded: DateTime.parse(json["date_added"]),
-    link: json["link"],
+    link: json["link"] as String,
     trailer: json["trailer"],
+    offlineStatus: json["offline_status"],
+    offlinePath: json["offline_path"]
   );
 
   Map<String, dynamic> toJson() => {
-    "cid": int.parse(cid!),
+    "id": id,
+    "cid": cid,
     "title": title,
     "description": description,
     "type": type,
@@ -137,5 +196,7 @@ class ItemModel {
     "date_added": dateAdded?.toIso8601String(),
     "link": link.toString(),
     "trailer": trailer,
+    "offline_status": offlineStatus,
+    "offline_path": offlinePath
   };
 }

@@ -4,7 +4,6 @@ import 'package:news/constants/color_constants.dart';
 import 'package:news/constants/size_constants.dart';
 import 'package:news/constants/ui_constants.dart';
 import 'package:news/controllers/news_controller.dart';
-import 'package:news/db/saved_item_database.dart';
 import 'package:news/models/saved_item_model.dart';
 import 'package:news/providers/news_provider.dart';
 import 'package:news/utils/shared_preferences.dart';
@@ -53,7 +52,6 @@ class _AccountPageState extends ConsumerState {
   @override
   void initState() {
     super.initState();
-    refreshNotes();
   }
 
   @override
@@ -63,13 +61,6 @@ class _AccountPageState extends ConsumerState {
     super.dispose();
   }
 
-  Future refreshNotes() async {
-    setState(() => isLoading = true);
-
-    this.savedItems = await SavedItemsDatabase.instance.readAllItems();
-
-    setState(() => isLoading = false);
-  }
 
 
   @override

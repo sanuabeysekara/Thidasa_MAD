@@ -152,11 +152,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             });
         }
         print( widget.email+ widget.password);
-
       },
       child: Text('LOGIN'),
     );
-
   }
   @override
   void initState() {
@@ -169,9 +167,6 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
     super.dispose();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +193,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
               ),
               SizedBox(height: 10,),
 
-              Text("Sign up and explore a whole new world of entertainment.",
+              Text("Sign up ",
                 style: TextStyle(
                   fontWeight: FontWeight.w200,
                   fontSize: Sizes.dimen_16,
@@ -222,7 +217,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         )
                     ),
                     validator: (title) => title != null && title.isEmpty
-                        ? 'The Name cannot be empty'
+                        ? 'Please Enter Name'
                         : null,
                     onChanged: (text){
                       setState(() {
@@ -270,7 +265,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         )
                     ),
                     validator: (title) => title != null && title.isEmpty
-                        ? 'The Password cannot be empty'
+                        ? 'Enter Pasword'
                         : null,
                     onChanged: (text){
                       setState(() {

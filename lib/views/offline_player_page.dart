@@ -77,7 +77,7 @@ class _OfflinePlayerPageState extends ConsumerState<OfflinePlayerPage> {
     super.initState();
     // ref.read(genresProvider).isGenreLoading = true;
     // ref.read(genresProvider).getGenreItems();
-    print(widget.savedItemModel.offlinePath!);
+    print("Offline Path"+widget.savedItemModel.offlinePath!);
     controller = VideoPlayerController.file(file)
       ..initialize().then((_) {
         setState(() {});

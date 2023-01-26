@@ -8,10 +8,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news/utils/shared_preferences.dart';
 import 'package:news/views/home_page.dart';
 import 'package:news/views/navigation.dart';
-
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'constants/color_constants.dart';
 
 void main() async{
+
+  await FlutterDownloader.initialize(
+      debug: true, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: true // option: set to false to disable working with http links (default: false)
+  );
+
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    bool inDebug = false;
+    assert(() { inDebug = true; return true; }());
+    // In debug mode, use the normal error widget which shows
+    // the error message:
+    if (inDebug)
+      return ErrorWidget(details.exception);
+    // In release builds, show a yellow-on-blue message instead:
+    return Container(
+      alignment: Alignment.center,
+      child: Text(
+        'Error! ${details.exception}',
+        style: TextStyle(color: Colors.yellow),
+        textDirection: TextDirection.ltr,
+      ),
+    );
+  };
+
+
   WidgetsFlutterBinding.ensureInitialized();
   await UserSharedPreferences.init();
   SystemChrome.setPreferredOrientations([
@@ -52,7 +77,15 @@ class _MyAppState extends State<MyApp> {
         /* dark theme settings */
       ),
       themeMode: ThemeMode.dark,
-      home: NavigationController(),
+      home:
+      WillPopScope(
+          onWillPop: ()  {
+
+              return Future.value(false);
+
+          },
+          child: NavigationController()
+      ),
     );
   }
 }

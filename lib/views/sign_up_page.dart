@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:news/constants/color_constants.dart';
@@ -47,6 +49,7 @@ class SignUpPage extends ConsumerStatefulWidget {
 class _SignUpPageState extends ConsumerState<SignUpPage> {
   TextEditingController searchController = TextEditingController();
   late Flushbar flush;
+  bool _isLoadingPage = false;
 
   late List<SavedItem> savedItems;
   bool isLoading = false;
@@ -59,102 +62,111 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         primary: isFormValid ? null : Colors.grey.shade700,
       ),
       onPressed: () async {
-        var map = new Map<String, dynamic>();
-        map['name'] = widget.name;
-        map['email'] = widget.email;
-        map['password'] = widget.password;
-        ServerResponse serverResponse = await ref.read(httpProvider).signUp(map);
+        if(isFormValid){
+          setState(() {
+            _isLoadingPage = true;
+          });
+          var map = new Map<String, dynamic>();
+          map['name'] = widget.name;
+          map['email'] = widget.email;
+          map['password'] = widget.password;
+          ServerResponse serverResponse = await ref.read(httpProvider).signUp(map);
 
-        if(serverResponse.code==200){
-          Navigator.pop(context, true); // dialog returns true
+          if(serverResponse.code==200){
+            Navigator.pop(context, true); // dialog returns true
 
-          bool _wasButtonClicked;
+            bool? _wasButtonClicked;
 
-          flush = Flushbar<bool>(
-            title: "Success!",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 6),
-            backgroundColor: Colors.green.shade600,
-            icon: Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              title: "Success!",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 6),
+              backgroundColor: Colors.green.shade600,
+              icon: Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
+          }
+          else if(serverResponse.code==500){
+            bool? _wasButtonClicked;
+            setState(() {
+              _isLoadingPage = false;
             });
-        }
-        else if(serverResponse.code==500){
-          bool _wasButtonClicked;
-
-          flush = Flushbar<bool>(
-            animationDuration: Duration(milliseconds: 400),
-            title: "Oh! Snap",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 7),
-            backgroundColor: Colors.red.shade600,
-            icon: Icon(
-              Icons.dangerous_rounded,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              animationDuration: Duration(milliseconds: 400),
+              title: "Oh! Snap",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 7),
+              backgroundColor: Colors.red.shade600,
+              icon: Icon(
+                Icons.dangerous_rounded,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
+          }
+
+          else{
+            bool? _wasButtonClicked;
+            setState(() {
+              _isLoadingPage = false;
             });
-        }
-
-        else{
-          bool _wasButtonClicked;
-
-          flush = Flushbar<bool>(
-            animationDuration: Duration(milliseconds: 400),
-            title: "Oh! Snap",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 7),
-            backgroundColor: Colors.red.shade600,
-            icon: Icon(
-              Icons.dangerous_rounded,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              animationDuration: Duration(milliseconds: 400),
+              title: "Oh! Snap",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 7),
+              backgroundColor: Colors.red.shade600,
+              icon: Icon(
+                Icons.dangerous_rounded,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
-            });
+          }
+          print( widget.email+ widget.password);
         }
-        print( widget.email+ widget.password);
 
       },
-      child: Text('LOGIN'),
+      child: _isLoadingPage? CircularProgressIndicator(color: Colors.white,):Text("Sign Up"),
     );
 
   }
@@ -166,7 +178,9 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   @override
   void dispose() {
    // SavedItemsDatabase.instance.close();
-
+    setState(() {
+      _isLoadingPage = false;
+    });
     super.dispose();
   }
 

@@ -22,7 +22,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:news/widgets/saved_item_card.dart';
 
@@ -46,6 +48,7 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
+  bool _isLoadingPage = false;
   TextEditingController searchController = TextEditingController();
 
   late Flushbar flush;
@@ -61,75 +64,82 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         primary: isFormValid ? null : Colors.grey.shade700,
       ),
       onPressed: () async {
-        var map = new Map<String, dynamic>();
-        map['email'] = widget.email;
-        map['password'] = widget.password;
+        if(isFormValid){
+          setState(() {
+            _isLoadingPage = true;
+          });
+          var map = new Map<String, dynamic>();
+          map['email'] = widget.email;
+          map['password'] = widget.password;
 
-        if(await ref.read(httpProvider).signIn(map)){
+          if(await ref.read(httpProvider).signIn(map)){
 
 
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-              NavigationController()), (Route<dynamic> route) => false);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                NavigationController()), (Route<dynamic> route) => false);
 
-          bool _wasButtonClicked;
-          ref.read(httpProvider).updateSharedPreferenses();
-          flush = Flushbar<bool>(
-            title: "Hey "+UserSharedPreferences.getName()!,
-            message: "The Entertainment of your choice is beneath your finger tips.",
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 6),
-            backgroundColor: Colors.green.shade600,
-            icon: Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            bool? _wasButtonClicked;
+            ref.read(httpProvider).updateSharedPreferenses();
+            flush = Flushbar<bool>(
+              title: "Hey "+UserSharedPreferences.getName()!,
+              message: "The Entertainment of your choice is beneath your finger tips.",
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 6),
+              backgroundColor: Colors.green.shade600,
+              icon: Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
+          }
+          else{
+            ref.read(httpProvider).updateSharedPreferenses();
+            bool? _wasButtonClicked;
+            setState(() {
+              _isLoadingPage = false;
             });
-        }
-        else{
-          ref.read(httpProvider).updateSharedPreferenses();
-          bool _wasButtonClicked;
-
-          flush = Flushbar<bool>(
-            animationDuration: Duration(milliseconds: 400),
-            title: "Oh! Snap",
-            message: "The Email or Password is Invalid.",
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 7),
-            backgroundColor: Colors.red.shade600,
-            icon: Icon(
-              Icons.dangerous_rounded,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              animationDuration: Duration(milliseconds: 400),
+              title: "Oh! Snap",
+              message: "The Email or Password is Invalid.",
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 7),
+              backgroundColor: Colors.red.shade600,
+              icon: Icon(
+                Icons.dangerous_rounded,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
-            });
+          }
+          print( widget.email+ widget.password);
         }
-        print( widget.email+ widget.password);
 
       },
-      child: Text('LOGIN'),
+      child: _isLoadingPage? CircularProgressIndicator(color: Colors.white,):Text("Sign In"),
     );
 
   }
@@ -142,7 +152,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   @override
   void dispose() {
    // SavedItemsDatabase.instance.close();
-
+    setState(() {
+      _isLoadingPage = false;
+    });
     super.dispose();
   }
 

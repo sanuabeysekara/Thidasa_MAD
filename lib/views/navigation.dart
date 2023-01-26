@@ -17,6 +17,9 @@ import '../widgets/custom_appBar.dart';
 
 
 class NavigationController extends ConsumerStatefulWidget {
+  int? gotPageID;
+  NavigationController({Key? key,  this.gotPageID}) : super(key: key);
+
   @override
   _NavigationControllerState createState() =>
       _NavigationControllerState();
@@ -42,6 +45,14 @@ class _NavigationControllerState
   final PageStorageBucket bucket = PageStorageBucket();
 
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() => _selectedIndex = widget.gotPageID??0);
+
+  }
+
 
   Widget _bottomNavigationBar(int selectedIndex) => Container(
     child: CurvedNavigationBar(
@@ -138,7 +149,7 @@ class _NavigationControllerState
              ),
              SizedBox(width: 7,),
          SizedBox(
-         child:Flexible(child: Text(UserSharedPreferences.getName()??"",
+         child:SizedBox(child: Text(UserSharedPreferences.getName()??"",
            overflow: TextOverflow.ellipsis,
            style: TextStyle(
              fontSize: 16,

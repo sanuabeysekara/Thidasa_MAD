@@ -19,12 +19,15 @@ class HttpNotifier extends ChangeNotifier {
 
 // for carousel
   List<ItemModel> searchedItems = <ItemModel>[];
+  List<ItemModel> wishListItems = <ItemModel>[];
   List<ItemModel> latestItems = <ItemModel>[];
   ScrollController scrollController = ScrollController();
   String token = UserSharedPreferences.getToken()??"";
   String name = UserSharedPreferences.getName()??"";
   bool isSearchedItemsLoading = true;
   bool itemNotFound = false;
+  bool isWishListItemsLoading = true;
+  bool wishListitemNotFound = false;
   String baseURL="";
 
   ItemsNotifier() {
@@ -158,6 +161,62 @@ class HttpNotifier extends ChangeNotifier {
     print([baseURL]);
     // calling the API function and passing the URL here
     getSearchedItemsFromApi(baseURL);
+  }
+
+
+
+
+
+
+  Future<List<ItemModel>> getWishListItemsFromApi() async {
+    isWishListItemsLoading = true;
+    wishListitemNotFound = false;
+
+
+    var url = ThidasaApiConstants.appURL+"favourite_list/"+UserSharedPreferences.getID()!;
+
+    print([url]);
+
+    http.Response res = await http.get(Uri.parse(url));
+
+    if (res.statusCode == 200) {
+      List<ItemModel> items = (jsonDecode(res.body) as List<dynamic>).map((e) =>
+          ItemModel.fromJson(e as Map<String, dynamic>)).toList();
+
+      if (items.isEmpty && items.length == 0) {
+        wishListitemNotFound = true;
+        isWishListItemsLoading = false;
+        wishListItems = [];
+        notifyListeners();
+      } else {
+        if (isSearchedItemsLoading == true) {
+          // combining two list instances with spread operator
+          wishListItems = items;
+          if (scrollController.hasClients) scrollController.jumpTo(0.0);
+          notifyListeners();
+          return items;
+        } else {
+          if (items.isNotEmpty) {
+            wishListItems = items;
+            if (scrollController.hasClients) scrollController.jumpTo(0.0);
+            notifyListeners();
+            return items;
+          }
+        }
+        itemNotFound = false;
+        Future.delayed(const Duration(seconds: 4),(){
+          isWishListItemsLoading = false;
+          notifyListeners();
+
+        });        notifyListeners();
+      }
+    } else {
+      wishListitemNotFound = true;
+      return wishListItems;
+      notifyListeners();
+    }
+
+    return wishListItems;
   }
 
 

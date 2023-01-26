@@ -25,7 +25,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:news/widgets/saved_item_card.dart';
 
@@ -54,6 +56,7 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
   TextEditingController searchController = TextEditingController();
 
   late Flushbar flush;
+  bool _isLoadingPage = false;
 
   late List<SavedItem> savedItems;
   bool isLoading = false;
@@ -66,6 +69,10 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
         primary: isFormValid ? null : Colors.grey.shade700,
       ),
       onPressed: () async {
+      if(isFormValid){
+        setState(() {
+          _isLoadingPage = true;
+        });
         var map = new Map<String, dynamic>();
         map['cid'] = widget.cid;
         map['uid'] = UserSharedPreferences.getID();
@@ -77,7 +84,7 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
               NavigationController()), (Route<dynamic> route) => false);
 
-          bool _wasButtonClicked;
+          bool? _wasButtonClicked;
           flush = Flushbar<bool>(
             title: "Review Added",
             message: responseGot.message,
@@ -103,8 +110,10 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
             });
         }
         else{
-          bool _wasButtonClicked;
-
+          bool? _wasButtonClicked;
+          setState(() {
+            _isLoadingPage = false;
+          });
           flush = Flushbar<bool>(
             animationDuration: Duration(milliseconds: 400),
             title: "Oh! Snap",
@@ -131,9 +140,10 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
             });
         }
         print( widget.title+ widget.review+widget.rating.toString());
+      }
 
       },
-      child: Text('Add'),
+      child: _isLoadingPage? CircularProgressIndicator(color: Colors.white,):Text("Add"),
     );
 
   }
@@ -146,7 +156,9 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
   @override
   void dispose() {
    // SavedItemsDatabase.instance.close();
-
+    setState(() {
+      _isLoadingPage = false;
+    });
     super.dispose();
   }
 

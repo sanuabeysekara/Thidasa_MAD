@@ -23,7 +23,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:news/widgets/saved_item_card.dart';
 
@@ -33,7 +32,9 @@ import '../providers/navigation_provider.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import 'navigation.dart';
 
-
+import 'package:another_flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 
 
 
@@ -49,6 +50,7 @@ class EditProfilePage extends ConsumerStatefulWidget {
 
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   TextEditingController searchController = TextEditingController();
+  bool _isLoadingPage = false;
 
   late Flushbar flush;
 
@@ -63,101 +65,110 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         primary: isFormValid ? null : Colors.grey.shade700,
       ),
       onPressed: () async {
-        print("User Id");
-        var map = new Map<String, dynamic>();
-        map['uid'] = UserSharedPreferences.getID();
-        map['name'] = widget.name??"";
-        map['email'] = widget.email??"";
-        ServerResponse serverResponse = await ref.read(httpProvider).editProfile(map);
+        if(isFormValid){
+          setState(() {
+            _isLoadingPage = true;
+          });
+          print("User Id");
+          var map = new Map<String, dynamic>();
+          map['uid'] = UserSharedPreferences.getID();
+          map['name'] = widget.name??"";
+          map['email'] = widget.email??"";
+          ServerResponse serverResponse = await ref.read(httpProvider).editProfile(map);
 
-        if(serverResponse.code==200){
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-              NavigationController()), (Route<dynamic> route) => false);
-          bool _wasButtonClicked;
-          UserSharedPreferences.setName(map['name']);
-          UserSharedPreferences.setEmail(map['email']);
-          flush = Flushbar<bool>(
-            title: "Success!",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 6),
-            backgroundColor: Colors.green.shade600,
-            icon: Icon(
-              Icons.check_circle_outline,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+          if(serverResponse.code==200){
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                NavigationController()), (Route<dynamic> route) => false);
+            bool? _wasButtonClicked;
+            UserSharedPreferences.setName(map['name']);
+            UserSharedPreferences.setEmail(map['email']);
+            flush = Flushbar<bool>(
+              title: "Success!",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 6),
+              backgroundColor: Colors.green.shade600,
+              icon: Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
+          }
+          else if(serverResponse.code==500){
+            bool? _wasButtonClicked;
+            setState(() {
+              _isLoadingPage = false;
             });
-        }
-        else if(serverResponse.code==500){
-          bool _wasButtonClicked;
-
-          flush = Flushbar<bool>(
-            animationDuration: Duration(milliseconds: 400),
-            title: "Oh! Snap",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 7),
-            backgroundColor: Colors.red.shade600,
-            icon: Icon(
-              Icons.dangerous_rounded,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              animationDuration: Duration(milliseconds: 400),
+              title: "Oh! Snap",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 7),
+              backgroundColor: Colors.red.shade600,
+              icon: Icon(
+                Icons.dangerous_rounded,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
+          }
+          else{
+            bool? _wasButtonClicked;
+            setState(() {
+              _isLoadingPage = false;
             });
-        }
-        else{
-          bool _wasButtonClicked;
-
-          flush = Flushbar<bool>(
-            animationDuration: Duration(milliseconds: 400),
-            title: "Oh! Snap",
-            message: serverResponse.message,
-            flushbarPosition: FlushbarPosition.TOP,
-            duration: Duration(seconds: 7),
-            backgroundColor: Colors.red.shade600,
-            icon: Icon(
-              Icons.dangerous_rounded,
-              color: Colors.white,),
-            mainButton: TextButton(
-              onPressed: () {
-                flush.dismiss(true); // result = true
-              },
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
-            ..show(context).then((result) {
-              setState(() { // setState() is optional here
-                _wasButtonClicked = result;
+            flush = Flushbar<bool>(
+              animationDuration: Duration(milliseconds: 400),
+              title: "Oh! Snap",
+              message: serverResponse.message,
+              flushbarPosition: FlushbarPosition.TOP,
+              duration: Duration(seconds: 7),
+              backgroundColor: Colors.red.shade600,
+              icon: Icon(
+                Icons.dangerous_rounded,
+                color: Colors.white,),
+              mainButton: TextButton(
+                onPressed: () {
+                  flush.dismiss(true); // result = true
+                },
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),) // <bool> is the type of the result passed to dismiss() and collected by show().then((result){})
+              ..show(context).then((result) {
+                setState(() { // setState() is optional here
+                  _wasButtonClicked = result;
+                });
               });
-            });
+          }
         }
       },
-      child: Text('SAVE'),
+      child: _isLoadingPage? CircularProgressIndicator(color: Colors.white,):Text("Save"),
     );
 
   }
@@ -170,7 +181,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   @override
   void dispose() {
    // SavedItemsDatabase.instance.close();
-
+    setState(() {
+      _isLoadingPage = false;
+    });
     super.dispose();
   }
 

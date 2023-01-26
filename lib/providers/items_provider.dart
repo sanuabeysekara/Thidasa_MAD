@@ -63,17 +63,12 @@ class ItemsNotifier extends ChangeNotifier {
     }
   }
 
-  reset() {
-    country = UserSharedPreferences.getDefaultCountry() == null
-        ? ""
-        : UserSharedPreferences.getDefaultCountry()!;
-    category = UserSharedPreferences.getDefaultCategory() == null
-        ? ""
-        : UserSharedPreferences.getDefaultCategory()!;
-    searchItems = '';
-    channel = '';
-    cName = '';
-    hasMore = true;
+  refresh() {
+    getTrendingItems();
+    getLatestItems();
+    if(UserSharedPreferences.getToken()!=null){
+      initializeFavourites();
+    }
     notifyListeners();
     // getAllNews(reload: true);
     // getBreakingNews(reload: true);

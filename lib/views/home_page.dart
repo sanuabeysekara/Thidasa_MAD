@@ -38,14 +38,9 @@ class HomePage extends ConsumerStatefulWidget  {
   _HomePageState createState() => _HomePageState();
 }
 
-
-
-
 class _HomePageState extends ConsumerState  {
 
   TextEditingController searchController = TextEditingController();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +50,7 @@ class _HomePageState extends ConsumerState  {
     List<ItemModel> latestList = ref.watch(itemsProvider).latestItems;
     List<GenreModel> genres = ref.watch(genresProvider).allGenres;
 
-    return Stack(
-      children: [
-        SingleChildScrollView(
+    return RefreshIndicator(child: SingleChildScrollView(
           controller: ref.watch(newsProvider).scrollController,
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: const BouncingScrollPhysics(),
@@ -282,12 +275,12 @@ class _HomePageState extends ConsumerState  {
 
                       // onTap: () => Get.to(() => WebViewNews(
                       //     newsUrl: allNews[index].url)),
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ViewPage(cid: latestList[index].cid,type: latestList[index].type,)));
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ViewPage(cid: latestList[index].cid,type: latestList[index].type,)));
 
-                        },
+                      },
                       child: ItemCard(
                           latestList[index].cid!,
                           latestList[index].coverPhoto!,
@@ -308,13 +301,12 @@ class _HomePageState extends ConsumerState  {
 
             ],
           ),
-        ),
-      ],
-    );
-
+        ), onRefresh: ()async{
+      ref.read(itemsProvider).refresh();
+    });
   }
-}
 
+}
 
 // SingleChildScrollView(
 // controller: ref.watch(newsProvider).scrollController,

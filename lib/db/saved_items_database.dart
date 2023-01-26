@@ -68,14 +68,6 @@ class SavedItemsDatabase {
   )
 ''');
   }
-
-
-
-
-
-
-
-
   Future<SavedItemModel> create(ItemModel ItemGot) async {
     final db = await instance.database;
 

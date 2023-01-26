@@ -7,6 +7,7 @@ import 'package:news/controllers/news_controller.dart';
 import 'package:news/models/saved_item_model.dart';
 import 'package:news/providers/news_provider.dart';
 import 'package:news/utils/shared_preferences.dart';
+import 'package:news/views/download_page.dart';
 import 'package:news/views/filter_page.dart';
 import 'package:news/views/home_page.dart';
 import 'package:news/views/settings_page.dart';
@@ -131,6 +132,42 @@ class _AccountPageState extends ConsumerState {
                 ),
               )
           ),
+          SizedBox(height: 10,),
+
+          GestureDetector(
+              onTap: (){
+                Navigator.push(context,
+                  CupertinoPageRoute(
+                      builder: (BuildContext context){
+                        return  DownloadPage();
+                      }
+                  ),
+                );
+
+              },
+              child: Container(
+                width: 300,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: AppColors.thidasaBlue,
+                    borderRadius: BorderRadius.circular(15)
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.download),
+                    SizedBox(width: 25,),
+                    Text("Downloads",style: TextStyle(fontSize: Sizes.dimen_16),),
+                    Spacer(),
+                    Spacer(),
+                    Spacer(),
+                    Expanded(
+                      child: Icon(Icons.arrow_forward_ios_rounded),
+                    )
+                  ],
+                ),
+              )
+          ),
+
           SizedBox(height: 10,),
 
           GestureDetector(

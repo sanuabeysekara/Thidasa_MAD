@@ -53,13 +53,7 @@ class ItemsNotifier extends ChangeNotifier {
         scrollController.position.maxScrollExtent) {
       isLoading = true;
       isLatestItemsLoading = true;
-      if (hasMore) {
-        //getAllNews();
-      }
-      else {
-        print('Has More is false therefore get all news didnt implemented');
-      }
-      print("Scroll Activated");
+
     }
   }
 

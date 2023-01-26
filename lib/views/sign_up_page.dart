@@ -237,7 +237,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       )
                     ),
                     validator: (title) => title != null && title.isEmpty
-                        ? 'The Email cannot be empty'
+                        ? 'Enter Email'
                         : null,
                     onChanged: (text){
                       setState(() {

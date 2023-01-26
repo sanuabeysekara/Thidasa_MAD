@@ -145,12 +145,9 @@ class ItemDetailsNotifier extends ChangeNotifier {
   }
 
   Future<ItemDetailsTorrentMovie> getTorrentMovieDetails(String cid) async {
-    String uid;
+    String uid="";
     if(UserSharedPreferences.getToken()!=null){
       uid = UserSharedPreferences.getID()!;
-    }
-    else{
-      uid = "";
     }
 
     http.Response res = await http.get(
@@ -176,13 +173,11 @@ class ItemDetailsNotifier extends ChangeNotifier {
   }
 
   Future<ItemDetailsGeneral> getGeneralDetails(String cid) async {
-    String uid;
+    String uid="";
     if(UserSharedPreferences.getToken()!=null){
       uid = UserSharedPreferences.getID()!;
     }
-    else{
-      uid = "";
-    }
+
 
     http.Response res = await http.get(
       Uri.parse(ThidasaApiConstants.appURL+"view/"+cid+"/"+uid),
@@ -192,14 +187,11 @@ class ItemDetailsNotifier extends ChangeNotifier {
       final jsonArray = jsonDecode(res.body);
       print(jsonArray);
       final ItemDetailsGeneral itemDetails = ItemDetailsGeneral.fromJson(jsonArray);
-      //print("Successfully Retrived TV Series Data");
 
       print(itemDetails.itemData?.coverPhoto);
       return itemDetails;
 
     } else {
-      print("Unsuccessfully Retrived General Show Data");
-
       notifyListeners();
       return ItemDetailsGeneral();
 
